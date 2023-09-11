@@ -4,14 +4,16 @@ import { SendIntentAndroid } from 'react-native-sms';
 import Communications from 'react-native-communications';
 import queryString from 'query-string';
 import { NativeModules,PermissionsAndroid} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 let DirectSms = NativeModules.DirectSms;
 
-const PaymentScreen = () => {
+const PaymentScreen = ({ navigation }) => {
   const [recipientName, setRecipientName] = useState('');
   const [amount, setAmount] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const mobileNumber = '9892731267';
+  const mobileNumber = '8451074332';
   const handlePayment = () => {
     // Construct the message
     if (!recipientName || !amount || !phoneNumber) {
@@ -44,6 +46,11 @@ const PaymentScreen = () => {
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           DirectSms.sendDirectSms(mobileNumber, `${recipientName},${amount},${phoneNumber}`);
           alert('SMS sent');
+          setRecipientName('');
+          setAmount('');
+          setPhoneNumber('');
+          // navigation.navigate('PaymentSuccess');
+          
         } else {
           alert('SMS permission denied');
         }
@@ -64,6 +71,7 @@ const PaymentScreen = () => {
           placeholder="Enter recipient's name"
           value={recipientName}
           onChangeText={setRecipientName}
+          placeholderTextColor={'#000'}
         />
       </View>
       <View style={styles.inputContainer}>
@@ -74,6 +82,7 @@ const PaymentScreen = () => {
           keyboardType="numeric"
           value={amount}
           onChangeText={setAmount}
+          placeholderTextColor={'#000'}
         />
       </View>
       <View style={styles.inputContainer}>
@@ -84,6 +93,7 @@ const PaymentScreen = () => {
           keyboardType="numeric"
           value={phoneNumber}
           onChangeText={setPhoneNumber}
+          placeholderTextColor={'#000'}
         />
       </View>
       <TouchableOpacity style={styles.button} onPress={sendDirectSms}>
@@ -103,7 +113,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: 'black',
+    color: '#007BFF',
   },
   inputContainer: {
     marginBottom: 20,
@@ -120,6 +130,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
     fontSize: 16,
+    color: '#000',
   },
   button: {
     backgroundColor: '#007BFF',

@@ -24,6 +24,7 @@ const BankSetUp = ({ navigation }) => {
           placeholder="Enter bank name"
           value={bankName}
           onChangeText={setBankName}
+          placeholderTextColor={'#000'}
         />
       </View>
       <View style={styles.inputContainer}>
@@ -33,6 +34,7 @@ const BankSetUp = ({ navigation }) => {
           placeholder="Enter account number"
           value={accountNumber}
           onChangeText={setAccountNumber}
+          placeholderTextColor={'#000'}
         />
       </View>
       <View style={styles.inputContainer}>
@@ -42,6 +44,7 @@ const BankSetUp = ({ navigation }) => {
           placeholder="Enter IFSC code"
           value={ifscCode}
           onChangeText={setIfscCode}
+          placeholderTextColor={'#000'}
         />
       </View>
       <TouchableOpacity style={styles.button} onPress={handleContinue}>
@@ -63,10 +66,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    color: '#007BFF',
   },
   inputContainer: {
     marginBottom: 20,
     width: '100%',
+    
   },
   label: {
     fontSize: 16,
@@ -80,6 +85,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
     fontSize: 16,
+    color: '#000',
   },
   button: {
     backgroundColor: '#007BFF',

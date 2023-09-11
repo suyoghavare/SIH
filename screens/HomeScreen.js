@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'left',
+    color: '#007BFF',
   },
   loginButton: {
     paddingVertical: 6,

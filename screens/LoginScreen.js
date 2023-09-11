@@ -24,6 +24,7 @@ const LoginScreen = ({ navigation }) => {
         placeholder="Phone Number"
         value={Phone}
         onChangeText={setPhoneNumber}
+        placeholderTextColor="#000" 
       />
       
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 15,
-    color: '#333',
+    color: '#000',
   },
   button: {
     backgroundColor: '#007BFF',

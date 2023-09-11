@@ -49,11 +49,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    color: '#007BFF',
   },
   instructions: {
     fontSize: 18,
     marginBottom: 20,
     textAlign: 'center',
+    color : '#333333',  
   },
   button: {
     backgroundColor: '#007BFF',
