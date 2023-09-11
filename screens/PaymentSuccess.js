@@ -6,7 +6,7 @@ const PaymentSuccess = ({ navigation }) => {
   useEffect(() => {
     setTimeout(() => {
       navigation.goBack(); // Automatically go back to the previous screen after 3 seconds
-    }, 6000);
+    }, 3000);
   }, [navigation]);
 
   return (

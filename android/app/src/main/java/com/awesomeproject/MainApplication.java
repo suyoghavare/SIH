@@ -10,6 +10,9 @@ import com.facebook.soloader.SoLoader;
 import java.util.List;
 import com.awesomeproject.MySendSmsPackage; 
 import com.oblador.vectoricons.VectorIconsPackage;
+import com.centaurwarchief.smslistener.SmsListenerPackage;
+
+
 
 
 public class MainApplication extends Application implements ReactApplication {
@@ -29,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
           // packages.add(new MyReactNativePackage());
           packages.add(new MySendSmsPackage());
           new VectorIconsPackage();
+          
           
           return packages;
         }
