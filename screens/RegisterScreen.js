@@ -39,6 +39,7 @@ const RegisterScreen = ({ navigation }) => {
           placeholder="Full Name"
           value={fullName}
           onChangeText={setFullName}
+          placeholderTextColor={'#000'}
         />
       </View>
       <View style={styles.iconInput}>
@@ -48,6 +49,7 @@ const RegisterScreen = ({ navigation }) => {
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
+          placeholderTextColor={'#000'}
         />
       </View>
       <View style={styles.iconInput}>
@@ -57,6 +59,7 @@ const RegisterScreen = ({ navigation }) => {
           placeholder="Phone Number"
           value={phoneNumber}
           onChangeText={setPhoneNumber}
+          placeholderTextColor={'#000'}
         />
       </View>
       <View style={styles.iconInput}>
@@ -67,6 +70,7 @@ const RegisterScreen = ({ navigation }) => {
           keyboardType="numeric"
           value={aadharNumber}
           onChangeText={setAadharNumber}
+          placeholderTextColor={'#000'}
         />
       </View>
       <View style={styles.iconInput}>
@@ -76,6 +80,7 @@ const RegisterScreen = ({ navigation }) => {
           placeholder="Pan Card Number"
           value={panCardNumber}
           onChangeText={setPanCardNumber}
+          placeholderTextColor={'#000'}
         />
       </View>
       <View style={styles.iconInput}>
@@ -85,6 +90,7 @@ const RegisterScreen = ({ navigation }) => {
           placeholder="Date of Birth (MM/DD/YYYY)"
           value={dob}
           onChangeText={setDOB}
+          placeholderTextColor={'#000'}
         />
       </View>
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
@@ -109,6 +115,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    color: '#007BFF',
   },
   iconInput: {
     flexDirection: 'row',
@@ -119,10 +126,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     marginBottom: 15,
+    color : '#000'  
   },
   input: {
     flex: 1,
     marginLeft: 10,
+    fontSize: 16,
+    color : '#000'
   },
   button: {
     backgroundColor: '#007BFF',

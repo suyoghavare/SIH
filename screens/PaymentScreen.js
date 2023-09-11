@@ -1,25 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { SendIntentAndroid } from 'react-native-sms';
-import Communications from 'react-native-communications';
-import queryString from 'query-string';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Modal } from 'react-native';
+
 import { NativeModules,PermissionsAndroid} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { useNavigation } from '@react-navigation/native';
+
 
 let DirectSms = NativeModules.DirectSms;
 
 const PaymentScreen = ({ navigation }) => {
-  const [recipientName, setRecipientName] = useState('');
+  const [recipientNumber, setRecipientNumber] = useState('');
   const [amount, setAmount] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [PinNumber, setPinNumber] = useState('');
   const mobileNumber = '8451074332';
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const handlePayment = () => {
     // Construct the message
-    if (!recipientName || !amount || !phoneNumber) {
-      Alert.alert('Error', 'Please fill in all fields.');
-      return;
-    }
+    
     
     // const message = `Recipient's Name: ${recipientName}, Amount: ${amount}, Phone Number: ${phoneNumber}`;
     //         const recipients = '9892731267'; // Replace with the recipient's phone number
@@ -29,6 +24,10 @@ const PaymentScreen = ({ navigation }) => {
   };
 
   const sendDirectSms = async () => {
+    if (!recipientNumber || !amount || !PinNumber) {
+      Alert.alert('Error', 'Please fill in all fields.');
+      return;
+    }
     if (mobileNumber) {
       try {
         const granted = await PermissionsAndroid.request(
@@ -44,12 +43,15 @@ const PaymentScreen = ({ navigation }) => {
           },
         );
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          DirectSms.sendDirectSms(mobileNumber, `${recipientName},${amount},${phoneNumber}`);
-          alert('SMS sent');
-          setRecipientName('');
+          DirectSms.sendDirectSms(mobileNumber, `"Payment",${recipientNumber},${amount},${PinNumber}`);
+          setIsModalVisible(true); // Show the modal when user clicks on Apply
+                    setTimeout(() => {
+                        setIsModalVisible(false); // Hide the modal after 3 seconds
+                    }, 3000);
+          setRecipientNumber('');
           setAmount('');
-          setPhoneNumber('');
-          // navigation.navigate('PaymentSuccess');
+          setPinNumber('');
+          navigation.navigate('PaymentSuccess');
           
         } else {
           alert('SMS permission denied');
@@ -65,12 +67,13 @@ const PaymentScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Payment</Text>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Recipient's Name</Text>
+        <Text style={styles.label}>Recipient's Number</Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter recipient's name"
-          value={recipientName}
-          onChangeText={setRecipientName}
+          placeholder="Enter Recipient's Number"
+          keyboardType="numeric"
+          value={recipientNumber}
+          onChangeText={setRecipientNumber}
           placeholderTextColor={'#000'}
         />
       </View>
@@ -86,19 +89,32 @@ const PaymentScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Phone Number</Text>
+        <Text style={styles.label}>Pin</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter phone number"
           keyboardType="numeric"
-          value={phoneNumber}
-          onChangeText={setPhoneNumber}
+          value={PinNumber}
+          onChangeText={setPinNumber}
           placeholderTextColor={'#000'}
         />
       </View>
       <TouchableOpacity style={styles.button} onPress={sendDirectSms}>
         <Text style={styles.buttonText}>Make Payment</Text>
       </TouchableOpacity>
+       {/* Modal for "Applied Successfully" */}
+       <Modal
+                animationType="slide"
+                transparent={true}
+                visible={isModalVisible}
+                onRequestClose={() => setIsModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalText}>Payment Processing .....</Text>
+                    </View>
+                </View>
+            </Modal>
     </View>
   );
 };
@@ -143,6 +159,27 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    color: '#000',
+},
+modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 20,
+    alignItems: 'center',
+    color: '#000',
+},
+modalText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#007BFF',
+},
+
 });
 
 export default PaymentScreen;

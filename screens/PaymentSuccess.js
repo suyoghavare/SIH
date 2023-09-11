@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons'; // Import Ionicons from Expo vector icons
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Import a custom checkmark icon
 
 const PaymentSuccess = ({ navigation }) => {
   useEffect(() => {
     setTimeout(() => {
-      navigation.goBack(); // Automatically go back to HomeScreen after 3 seconds
-    }, 3000);
-  }, []);
+      navigation.goBack(); // Automatically go back to the previous screen after 3 seconds
+    }, 6000);
+  }, [navigation]);
 
   return (
     <View style={styles.container}>
-      <Icon name="md-checkmark-circle-outline" size={100} color="#0079FF" />
-      <Text style={styles.message}>Your payment is successfully processed, please check transaction history for updates.</Text>
+      <Icon name="check-circle" size={100} color="#0079FF" />
+      <Text style={styles.message}>Your payment is successfully processed. Please check the transaction history for updates.</Text>
     </View>
   );
 };
@@ -27,8 +27,9 @@ const styles = StyleSheet.create({
   message: {
     fontSize: 24,
     fontWeight: 'bold',
-    textAlign: 'center', // Center-align the text horizontally
-    marginTop: 20, // Add some spacing between the icon and the text
+    textAlign: 'center',
+    marginTop: 20,
+    color: '#0079FF',
   },
 });
 
