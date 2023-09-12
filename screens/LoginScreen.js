@@ -12,6 +12,7 @@ const LoginScreen = ({ navigation }) => {
     //   // Validate the phone number format
     //   if (!cleanedPhoneNumber.match(/^\d{10}$/)) {
     //     Alert.alert('Error', 'Please enter a valid 10-digit phone number.');
+    //     setPhoneNumber('');
     //     return;
     //   }
 
@@ -34,7 +35,8 @@ const LoginScreen = ({ navigation }) => {
 
     //   if (response.ok) {
     //     // Request successful, navigate to the OTP screen
-    //     navigation.navigate('Otp');
+    //     setPhoneNumber('');
+    //     navigation.navigate('Otp',{ phone: cleanedPhoneNumber });
     //   } else {
     //     // Request failed, display an error message
     //     Alert.alert('Error', 'Failed to generate OTP. Please try again later.');

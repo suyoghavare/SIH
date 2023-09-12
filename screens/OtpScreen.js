@@ -1,11 +1,63 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 
-const OtpScreen = ({ navigation }) => {
+const OtpScreen = ({ navigation, route }) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const otpInputs = useRef([]);
+  const [MobNum, setMobNum] = useState('');
 
-  const handleOtpSubmission = () => {
+  // // Extract the phone number from the route parameters
+  // const { phone } = route.params;
+
+  // // Set the phone number to the MobNum state variable
+  // useEffect(() => {
+  //   setMobNum(phone);
+  // }, [phone]);
+
+  // const handleOtpSubmission = async () => {
+  //   // Combine the individual OTP digits
+  //   const enteredOtp = otp.join('');
+
+  //   try {
+  //     // Create the request body with MobNum and otp
+  //     const requestBody = {
+  //       MobNum: '+91',MobNum, // Add the mobile number
+  //       otp: enteredOtp,
+  //     };
+
+  //     // Send a POST request to verify the OTP
+  //     const response = await fetch(
+  //       'https://qky6iinshd.execute-api.ap-northeast-1.amazonaws.com/dev/otp/verify',
+  //       {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify(requestBody),
+  //       }
+  //     );
+
+  //     if (response.status === 200) {
+  //       // OTP verification successful, reset OTP input and navigate to the Home screen
+  //       setOtp(['', '', '', '', '', '']);
+  //       navigation.navigate('Home');
+  //     } else if (response.status === 400) {
+  //       // OTP verification failed, display an error message
+  //       setOtp(['', '', '', '', '', '']);
+  //       Alert.alert('Invalid OTP', 'The entered OTP is incorrect. Please try again.', [{ text: 'OK' }], {
+  //         cancelable: false,
+  //       });
+  //     } else {
+  //       // Handle other status codes here
+  //       Alert.alert('Error', 'An unexpected error occurred. Please try again later.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //     Alert.alert('Error', 'An unexpected error occurred. Please try again later.');
+  //   }
+  // };
+
+   const handleOtpSubmission = () => {
     // Combine the individual OTP digits
     const enteredOtp = otp.join('');
 
@@ -41,6 +93,7 @@ const OtpScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Enter OTP</Text>
+      <Text style={styles.mobNumText}>Mobile Number: {MobNum}</Text>
       <View style={styles.otpContainer}>
         {otp.map((digit, index) => (
           <TextInput
@@ -50,7 +103,7 @@ const OtpScreen = ({ navigation }) => {
             onChangeText={(value) => handleOtpInputChange(index, value)}
             keyboardType="numeric"
             maxLength={1}
-            ref={(ref) => otpInputs.current[index] = ref}
+            ref={(ref) => (otpInputs.current[index] = ref)}
           />
         ))}
       </View>
@@ -74,6 +127,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 30,
     color: '#007BFF',
+  },
+  mobNumText: {
+    fontSize: 18,
+    marginBottom: 20,
+    color: '#000',
   },
   otpContainer: {
     flexDirection: 'row',
