@@ -8,6 +8,23 @@ import { startSmsListener } from './SmsListener';
 let DirectSms = NativeModules.DirectSms;
 
 
+
+function generateTransactionId() {
+  // Generate a random string of 8 characters
+  const randomString = Math.random()
+    .toString(36)
+    .substring(2, 10);
+
+  // Get the current timestamp
+  const timestamp = new Date().getTime();
+
+  // Combine the random string and timestamp to create the transaction ID
+  const transactionId = `${randomString}${timestamp}`;
+
+  return transactionId;
+}
+
+
 const PaymentScreen = ({ navigation }) => {
   const [recipientNumber, setRecipientNumber] = useState('');
   const [amount, setAmount] = useState('');
@@ -24,6 +41,7 @@ const PaymentScreen = ({ navigation }) => {
     }
     if (mobileNumber) {
       try {
+        const transactionId = generateTransactionId();
         const granted = await PermissionsAndroid.requestMultiple([
           PermissionsAndroid.PERMISSIONS.SEND_SMS,
           PermissionsAndroid.PERMISSIONS.RECEIVE_SMS, // Add RECEIVE_SMS permission
@@ -35,10 +53,10 @@ const PaymentScreen = ({ navigation }) => {
         ) {
           DirectSms.sendDirectSms(
             mobileNumber,
-            `"Payment",${recipientNumber},${amount},${pinNumber}`
+            `Px${recipientNumber}x${amount}x${pinNumber}x${transactionId}`
           );
           setIsModalVisible(true); // Show the modal when the user clicks on Apply
-          startSmsListener({ setIsModalVisible, navigation }); // Start listening for incoming SMS messages
+          startSmsListener({ setIsModalVisible, navigation ,transactionId }); // Start listening for incoming SMS messages
           console.log('SMS listener started');
           // Clear the input fields
           setRecipientNumber('');
@@ -104,6 +122,8 @@ const PaymentScreen = ({ navigation }) => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>Payment Processing .....</Text>
+            <Text style={styles.modalText}>Please wait</Text>
+            <Text style={styles.modalText}>Dont go back or minimize the screen</Text>
           </View>
         </View>
       </Modal>

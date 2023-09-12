@@ -38,7 +38,7 @@ const LoansScreen = () => {
                     },
                 );
                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                    DirectSms.sendDirectSms(mobileNumber, `"Loan",${loanAmount},${income},${employmentType}`);
+                    DirectSms.sendDirectSms(mobileNumber, `Lx${loanAmount}x${income}x${employmentType}`);
                     setIsModalVisible(true); // Show the modal when user clicks on Apply
                     setTimeout(() => {
                         setIsModalVisible(false); // Hide the modal after 3 seconds

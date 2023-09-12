@@ -14,8 +14,10 @@ const OtpScreen = ({ navigation }) => {
     // and navigate to the HomeScreen upon successful verification
     const validOtp = '123456'; // Replace with your valid OTP
     if (enteredOtp === validOtp) {
+      setOtp(['', '', '', '', '', '']);
       navigation.navigate('Home');
     } else {
+      setOtp(['', '', '', '', '', '']);
       Alert.alert('Invalid OTP', 'Please enter a valid OTP.', [{ text: 'OK' }], {
         cancelable: false,
       });
@@ -32,7 +34,7 @@ const OtpScreen = ({ navigation }) => {
     if (index < otp.length - 1) {
       otpInputs.current[index + 1].focus();
     } else {
-      
+      // You can add navigation logic to the next screen here
     }
   };
 
