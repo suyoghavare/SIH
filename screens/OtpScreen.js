@@ -6,6 +6,8 @@ const OtpScreen = ({ navigation, route }) => {
   const otpInputs = useRef([]);
   const [MobNum, setMobNum] = useState('');
 
+
+  //Production//
   // // Extract the phone number from the route parameters
   // const { phone } = route.params;
 
@@ -21,7 +23,7 @@ const OtpScreen = ({ navigation, route }) => {
   //   try {
   //     // Create the request body with MobNum and otp
   //     const requestBody = {
-  //       MobNum: '+91',MobNum, // Add the mobile number
+  //       MobNum: `+91${MobNum}`, // Add the mobile number
   //       otp: enteredOtp,
   //     };
 
@@ -36,7 +38,7 @@ const OtpScreen = ({ navigation, route }) => {
   //         body: JSON.stringify(requestBody),
   //       }
   //     );
-
+  //       console.log(response);
   //     if (response.status === 200) {
   //       // OTP verification successful, reset OTP input and navigate to the Home screen
   //       setOtp(['', '', '', '', '', '']);
@@ -57,6 +59,8 @@ const OtpScreen = ({ navigation, route }) => {
   //   }
   // };
 
+
+  //testing//
    const handleOtpSubmission = () => {
     // Combine the individual OTP digits
     const enteredOtp = otp.join('');
