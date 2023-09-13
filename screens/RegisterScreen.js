@@ -26,7 +26,7 @@ const RegisterScreen = ({ navigation }) => {
     // Implement your registration logic here
     // For example, you can validate the inputs and register the user
     // Navigate to the HomeScreen upon successful registration
-    navigation.navigate('Login');
+    navigation.navigate('Ease Pay');
   };
 
   return (

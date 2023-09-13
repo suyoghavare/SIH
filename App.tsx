@@ -15,6 +15,7 @@ import PaymentSuccess from './screens/PaymentSuccess';
 import LoansScreen from './screens/LoanScreen';
 import PaymentFail from './screens/PaymentFailure';
 import ViewPoliciesScreen from './screens/PolicyScreen';
+import StartScreen from './screens/StartScreen';
 
 
 // Adjust the path as needed
@@ -26,8 +27,9 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Ease Pay">
         {/* Define your app's screens and their navigation options */}
+        <Stack.Screen name="Ease Pay" component={StartScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
