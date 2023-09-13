@@ -16,7 +16,7 @@ const HomeScreen = ({ navigation }) => {
     { title: 'Make a Payment', icon: 'credit-card', screen: firstTimePayment ? 'PaymentSetUp' : 'Payment' },
     { title: 'Transaction History', icon: 'info', screen: 'Transactions' },
     { title: 'Apply for Loans', icon: 'dollar-sign' , screen: 'Loans' },
-    { title: 'View Policies', icon: 'file-text', screen: 'Policies' },
+    { title: 'View Policies', icon: 'file-text', screen: 'ViewPolicies' },
   ];
 
   return (
