@@ -14,7 +14,7 @@ const HomeScreen = ({ navigation }) => {
 
   const cards = [
     { title: 'Make a Payment', icon: 'credit-card', screen: firstTimePayment ? 'PaymentSetUp' : 'Payment' },
-    { title: 'Transaction History', icon: 'info', screen: 'Transactions' },
+    { title: 'Transaction History', icon: 'info', screen: 'Transaction History' },
     { title: 'Apply for Loans', icon: 'dollar-sign' , screen: 'Loans' },
     { title: 'View Policies', icon: 'file-text', screen: 'ViewPolicies' },
   ];

@@ -16,6 +16,7 @@ import LoansScreen from './screens/LoanScreen';
 import PaymentFail from './screens/PaymentFailure';
 import ViewPoliciesScreen from './screens/PolicyScreen';
 import StartScreen from './screens/StartScreen';
+import TransactionScreen from './screens/TransactionScreen';
 
 
 // Adjust the path as needed
@@ -41,6 +42,7 @@ const App = () => {
         <Stack.Screen name="Loans" component={LoansScreen} />
         <Stack.Screen name="PaymentFail" component={PaymentFail} />
         <Stack.Screen name="ViewPolicies" component={ViewPoliciesScreen} />
+        <Stack.Screen name="Transaction History" component={TransactionScreen} />
         
         {/* Add more screens and navigation options here... */}
       </Stack.Navigator>
