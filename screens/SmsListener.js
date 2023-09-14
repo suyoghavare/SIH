@@ -1,17 +1,30 @@
 import SmsListener from 'react-native-android-sms-listener';
-import PaymentScreen from './PaymentScreen';
 import { Alert } from 'react-native';
-import PaymentSuccess from './PaymentSuccess';
-import transactionId from './PaymentScreen';
+import db from './database';
 
-const startSmsListener = ({ setIsModalVisible, navigation , transactionId }) => {
+const startSmsListener = ({ setIsModalVisible, navigation, transactionId }) => {
   SmsListener.addListener(message => {
     const smsBody = message.body;
     console.log('Received SMS:', smsBody);
 
-    if (smsBody.includes('True',transactionId)) {
+    // Check if the SMS contains "True" and the transactionId
+    if (smsBody.includes('True') && smsBody.includes(transactionId)) {
       // Close the modal when the desired SMS is received
       setIsModalVisible(false);
+
+      // Update payment status to 'success' in the database
+      db.transaction((tx) => {
+        tx.executeSql(
+          'UPDATE payment_history SET status = ? WHERE transaction_id = ?',
+          ['success', transactionId],
+          (_, results) => {
+            console.log('Payment status updated to success:', results);
+          },
+          (error) => {
+            console.error('Error updating payment status:', error);
+          }
+        );
+      });
 
       // Show a success alert
       Alert.alert(
@@ -28,11 +41,25 @@ const startSmsListener = ({ setIsModalVisible, navigation , transactionId }) => 
         ]
       );
     }
-    else if (smsBody.includes('False',transactionId)) {
+    // Check if the SMS contains "False" and the transactionId
+    else if (smsBody.includes('False') && smsBody.includes(transactionId)) {
       // Close the modal when the desired SMS is received
       setIsModalVisible(false);
 
-      // Show a success alert
+      // Update payment status to 'failed' in the database
+      db.transaction((tx) => {
+        tx.executeSql(
+          'UPDATE payment_history SET status = ? WHERE transaction_id = ?',
+          ['failed', transactionId],
+          (_, results) => {
+            console.log('Payment status updated to failed:', results);
+          },
+          (error) => {
+            console.error('Error updating payment status:', error);
+          }
+        );
+      });
+
       Alert.alert(
         'Failure',
         'Your payment is not successfully processed. Please try again.',
@@ -40,7 +67,7 @@ const startSmsListener = ({ setIsModalVisible, navigation , transactionId }) => 
           {
             text: 'OK',
             onPress: () => {
-              // Navigate to PaymentSuccess screen
+              // Navigate to PaymentFail screen
               navigation.navigate('PaymentFail');
             },
           },

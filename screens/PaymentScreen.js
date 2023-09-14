@@ -4,10 +4,10 @@ import { NativeModules, PermissionsAndroid, DeviceEventEmitter } from 'react-nat
 import SmsRetriever from 'react-native-sms-retriever';
 import SmsListener from 'react-native-android-sms-listener';
 import { startSmsListener } from './SmsListener';
+import db from './database'; // Import your Database.js file
+
 
 let DirectSms = NativeModules.DirectSms;
-
-
 
 function generateTransactionId() {
   // Generate a random string of 8 characters
@@ -24,7 +24,6 @@ function generateTransactionId() {
   return transactionId;
 }
 
-
 const PaymentScreen = ({ navigation }) => {
   const [recipientNumber, setRecipientNumber] = useState('');
   const [amount, setAmount] = useState('');
@@ -32,13 +31,12 @@ const PaymentScreen = ({ navigation }) => {
   const mobileNumber = '8451074332';
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  
-
   const sendDirectSms = async () => {
     if (!recipientNumber || !amount || !pinNumber) {
       Alert.alert('Error', 'Please fill in all fields.');
       return;
     }
+
     if (mobileNumber) {
       try {
         const transactionId = generateTransactionId();
@@ -46,22 +44,39 @@ const PaymentScreen = ({ navigation }) => {
           PermissionsAndroid.PERMISSIONS.SEND_SMS,
           PermissionsAndroid.PERMISSIONS.RECEIVE_SMS, // Add RECEIVE_SMS permission
         ]);
-  
+
         if (
           granted['android.permission.SEND_SMS'] === PermissionsAndroid.RESULTS.GRANTED &&
           granted['android.permission.RECEIVE_SMS'] === PermissionsAndroid.RESULTS.GRANTED
         ) {
-          DirectSms.sendDirectSms(
-            mobileNumber,
-            `Px${recipientNumber}x${amount}x${pinNumber}x${transactionId}`
-          );
-          setIsModalVisible(true); // Show the modal when the user clicks on Apply
-          startSmsListener({ setIsModalVisible, navigation ,transactionId }); // Start listening for incoming SMS messages
-          console.log('SMS listener started');
+          const message = `Px${recipientNumber}x${amount}x${pinNumber}x${transactionId}`;
+          
+          // Send the payment data as a message
+          DirectSms.sendDirectSms(mobileNumber, message);
+
+          // Show the modal when the user clicks on Apply
+          setIsModalVisible(true);
+          startSmsListener({ setIsModalVisible, navigation ,transactionId });
+
           // Clear the input fields
           setRecipientNumber('');
           setAmount('');
           setPinNumber('');
+
+          // Insert payment history into the database
+          const paymentDate = new Date().toString();
+          db.transaction((tx) => {
+            tx.executeSql(
+              'INSERT INTO payment_history (transaction_id, date_time, recipient, amount, status) VALUES (?, ?, ?, ?, ?)',
+              [transactionId, paymentDate, recipientNumber, parseFloat(amount), 'pending'], // Change 'success' to 'fail' if needed
+              (_, results) => {
+                console.log('Payment history saved:', results);
+              },
+              (error) => {
+                console.error('Error saving payment history:', error);
+              }
+            );
+          });
         } else {
           alert('SMS permission denied');
         }
@@ -71,7 +86,6 @@ const PaymentScreen = ({ navigation }) => {
       }
     }
   };
-  
 
   return (
     <View style={styles.container}>

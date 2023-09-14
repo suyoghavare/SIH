@@ -1,19 +1,76 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
+import db from './database';
 
 const TransactionScreen = () => {
-  // Sample transaction history data
+  const [paymentHistory, setPaymentHistory] = useState([]);
+
+  useEffect(() => {
+    // Retrieve payment history from the database
+    db.transaction((tx) => {
+      tx.executeSql(
+        'SELECT * FROM payment_history ORDER BY id DESC LIMIT 10',
+        [],
+        (_, results) => {
+          const rows = results.rows;
+          const history = [];
+
+          for (let i = 0; i < rows.length; i++) {
+            const item = rows.item(i);
+            history.push({
+              id: item.id,
+              transaction_id: item.transaction_id,
+              date_time: item.date_time,
+              recipient: item.recipient,
+              amount: item.amount,
+              status: item.status,
+            });
+          }
+
+          setPaymentHistory(history);
+        },
+        (error) => {
+          console.error('Error fetching payment history:', error);
+        }
+      );
+    });
+  }, []);
+
+  const renderPaymentItem = ({ item }) => {
+    let backgroundColor;
+
+    switch (item.status) {
+      case 'success':
+        backgroundColor = '#4CAF50'; // Green for success
+        break;
+      case 'failed':
+        backgroundColor = '#F44336'; // Red for failed
+        break;
+      case 'pending':
+      default:
+        backgroundColor = '#000'; // Black for pending (default)
+        break;
+    }
+
+    return (
+      <View style={[styles.paymentItem, { backgroundColor }]}>
+        <Text>Transaction ID: {item.transaction_id}</Text>
+        <Text>Date/Time: {item.date_time}</Text>
+        <Text>Recipient: {item.recipient}</Text>
+        <Text>Amount: {item.amount}</Text>
+        <Text>Status: {item.status}</Text>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Transaction History</Text>
-      <Text style={styles.infoText}>
-        Recent transactions will appear here. You can also view your transaction.
-        For further information, please contact your bank.
-        </Text>
-       <Text style={styles.infoText}> Helpline: 18001201740 (Toll Free)
-      </Text>
-      <Text style={styles.subTitle}>Recent Transactions:</Text>
+      <FlatList
+        data={paymentHistory}
+        renderItem={renderPaymentItem}
+        keyExtractor={(item) => item.id.toString()}
+      />
     </View>
   );
 };
@@ -31,22 +88,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: '#007BFF',
   },
-  subTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    paddingHorizontal: 20,
-    marginTop: 10,
-    marginBottom: 5,
-    color: '#007BFF',
+  paymentItem: {
+    padding: 10,
+    marginHorizontal: 20,
+    marginBottom: 10,
+    borderRadius: 8,
   },
-  infoText: {
-    fontSize: 16,
-    textAlign: 'justify',
-    paddingHorizontal: 20,
-    marginBottom: 20,
-    color: '#000',
-  },
-  
 });
 
 export default TransactionScreen;
