@@ -27,18 +27,53 @@ const RegisterScreen = ({ navigation }) => {
     };
 
     try {
+      const requestBody = {
+        MobNum: `+91${phoneNumber}`, // Add the mobile number
+        fullName: fullName,
+        email: email, 
+        aadharNumber: aadharNumber, 
+        panCardNumber: panCardNumber,
+        dob: dob,
+        password: password,
+      };
+
+      // Send a POST request to verify the OTP
+      const response = await fetch(
+        'https://qky6iinshd.execute-api.ap-northeast-1.amazonaws.com/dev/users',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+        console.log(response);
+
+        if (response.status === 200) {
       // Store the user data in AsyncStorage (you can use a different key)
       await AsyncStorage.setItem('userData', JSON.stringify(userData));
       // You can also store a flag to indicate that the user is registered
       await AsyncStorage.setItem('isRegistered', 'true');
 
-      // Navigate to the HomeScreen upon successful registration
-      navigation.navigate('Home');
-    } catch (error) {
+      // Navigate to the Ease Pay Biometric upon successful registration
+      navigation.navigate('Login');
+    } 
+  else if (response.status === 400){
+    Alert.alert('User Already Registered', 'Go to login to proceed further', [{ text: 'OK' }], {
+      cancelable: false,
+    });
+    navigation.navigate('Login');
+  }
+else {
+  // Handle other status codes here
+  Alert.alert('Error', 'An unexpected error occurred. Please try again later.');
+}}catch (error) {
       console.error('Error storing user data:', error);
       // Handle the error, possibly show an error message to the user
     }
   };
+
 
   return (
     <View style={styles.container}>

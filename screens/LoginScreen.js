@@ -5,48 +5,48 @@ const LoginScreen = ({ navigation }) => {
   const [phone, setPhoneNumber] = useState('');
 
   const handleLogin = async () => {
-    // try {
-    //   // Remove spaces and non-numeric characters from the phone number
-    //   const cleanedPhoneNumber = phone.replace(/\D/g, '');
+    try {
+      // Remove spaces and non-numeric characters from the phone number
+      const cleanedPhoneNumber = phone.replace(/\D/g, '');
 
-    //   // Validate the phone number format
-    //   if (!cleanedPhoneNumber.match(/^\d{10}$/)) {
-    //     Alert.alert('Error', 'Please enter a valid 10-digit phone number.');
-    //     setPhoneNumber('');
-    //     return;
-    //   }
+      // Validate the phone number format
+      if (!cleanedPhoneNumber.match(/^\d{10}$/)) {
+        Alert.alert('Error', 'Please enter a valid 10-digit phone number.');
+        setPhoneNumber('');
+        return;
+      }
 
-    //   // Construct the request body
-    //   const requestBody = {
-    //     ToNum: `+91${cleanedPhoneNumber}`,
-    //   };
+      // Construct the request body
+      const requestBody = {
+        ToNum: `+91${cleanedPhoneNumber}`,
+      };
 
-    //   // Send a POST request to the API
-    //   const response = await fetch(
-    //     'https://qky6iinshd.execute-api.ap-northeast-1.amazonaws.com/dev/otp',
-    //     {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //       body: JSON.stringify(requestBody),
-    //     }
-    //   );
+      // Send a POST request to the API
+      const response = await fetch(
+        'https://qky6iinshd.execute-api.ap-northeast-1.amazonaws.com/dev/otp',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
 
-    //   if (response.ok) {
-    //     // Request successful, navigate to the OTP screen
-    //     setPhoneNumber('');
-    //     navigation.navigate('Otp',{ phone: cleanedPhoneNumber });
-    //   } else {
-    //     // Request failed, display an error message
-    //     Alert.alert('Error', 'Failed to generate OTP. Please try again later.');
-    //   }
-    // } catch (error) {
-    //   console.error('Error:', error);
-    //   Alert.alert('Error', 'An unexpected error occurred. Please try again later.');
-    // }
+      if (response.ok) {
+        // Request successful, navigate to the OTP screen
+        setPhoneNumber('');
+        navigation.navigate('Otp',{ phone: cleanedPhoneNumber });
+      } else {
+        // Request failed, display an error message
+        Alert.alert('Error', 'Failed to generate OTP. Please try again later.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Alert.alert('Error', 'An unexpected error occurred. Please try again later.');
+    }
 
-    navigation.navigate('Otp');
+    // navigation.navigate('Otp');
   };
 
   return (

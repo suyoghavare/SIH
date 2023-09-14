@@ -46,7 +46,7 @@ const StartScreen = ({ navigation }) => {
   };
 
   const checkUserRegistration = async () => {
-    const isRegistered = await AsyncStorage.getItem('isRegistered');
+    const isRegistered = await AsyncStorage.getItem('isLogin');
 
     if (isRegistered === 'true') {
       // User is registered, navigate to the Home screen
@@ -63,7 +63,7 @@ const StartScreen = ({ navigation }) => {
         {isBiometricAvailable ? (
           <TouchableOpacity
             style={styles.iconButton}
-            onPress={onPressAuthenticate()}
+            onPress={onPressAuthenticate() || onPressAuthenticate}
           >
             <Text style={styles.icon}>🔒</Text> 
           </TouchableOpacity>

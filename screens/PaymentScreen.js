@@ -28,7 +28,7 @@ const PaymentScreen = ({ navigation }) => {
   const [recipientNumber, setRecipientNumber] = useState('');
   const [amount, setAmount] = useState('');
   const [pinNumber, setPinNumber] = useState('');
-  const mobileNumber = '8451074332';
+  const mobileNumber = '9892731267';
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const sendDirectSms = async () => {

@@ -1,17 +1,39 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, BackHandler, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = ({ navigation }) => {
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert("Hold on!", "Are you sure you want to go back?", [
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel"
+        },
+        { text: "YES", onPress: () => BackHandler.exitApp() }
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
+
+
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [firstTimePayment, setFirstTimePayment] = useState(true);
-
-  const handleLogout = async () => {
+    const handleLogout = async () => {
     // Clear the user credentials from AsyncStorage
     try {
       await AsyncStorage.removeItem('userData');
-      await AsyncStorage.removeItem('isRegistered');
+      await AsyncStorage.removeItem('isLogin');
     } catch (error) {
       console.error('Error clearing user data:', error);
     }
@@ -19,6 +41,7 @@ const HomeScreen = ({ navigation }) => {
     // Implement logout logic here
     // For now, just navigate back to the login screen
     navigation.navigate('Login');
+    
   };
 
   const cards = [

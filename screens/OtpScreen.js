@@ -9,83 +9,84 @@ const OtpScreen = ({ navigation, route }) => {
 
 
   //Production//
-  // // Extract the phone number from the route parameters
-  // const { phone } = route.params;
+  // Extract the phone number from the route parameters
+  const { phone } = route.params;
 
-  // // Set the phone number to the MobNum state variable
-  // useEffect(() => {
-  //   setMobNum(phone);
-  // }, [phone]);
+  // Set the phone number to the MobNum state variable
+  useEffect(() => {
+    setMobNum(phone);
+  }, [phone]);
 
-  // const handleOtpSubmission = async () => {
-  //   // Combine the individual OTP digits
-  //   const enteredOtp = otp.join('');
-
-  //   try {
-  //     // Create the request body with MobNum and otp
-  //     const requestBody = {
-  //       MobNum: `+91${MobNum}`, // Add the mobile number
-  //       otp: enteredOtp,
-  //     };
-
-  //     // Send a POST request to verify the OTP
-  //     const response = await fetch(
-  //       'https://qky6iinshd.execute-api.ap-northeast-1.amazonaws.com/dev/otp/verify',
-  //       {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify(requestBody),
-  //       }
-  //     );
-  //       console.log(response);
-  //     if (response.status === 200) {
-  //       // OTP verification successful, reset OTP input and navigate to the Home screen
-  //       setOtp(['', '', '', '', '', '']);
-  //       navigation.navigate('Home');
-  //     } else if (response.status === 400) {
-  //       // OTP verification failed, display an error message
-  //       setOtp(['', '', '', '', '', '']);
-  //       Alert.alert('Invalid OTP', 'The entered OTP is incorrect. Please try again.', [{ text: 'OK' }], {
-  //         cancelable: false,
-  //       });
-  //     } else {
-  //       // Handle other status codes here
-  //       Alert.alert('Error', 'An unexpected error occurred. Please try again later.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //     Alert.alert('Error', 'An unexpected error occurred. Please try again later.');
-  //   }
-  // };
-
-
-  //testing//
-   const handleOtpSubmission = () => {
+  const handleOtpSubmission = async () => {
     // Combine the individual OTP digits
     const enteredOtp = otp.join('');
 
-    // Implement your OTP verification logic here
-    // For example, you can compare the entered OTP with a valid OTP
-    // and navigate to the HomeScreen upon successful verification
-    const validOtp = '123456'; // Replace with your valid OTP
-    if (enteredOtp === validOtp) {
-      AsyncStorage.setItem('isRegistered', 'true')
-      .then(() => {
+    try {
+      // Create the request body with MobNum and otp
+      const requestBody = {
+        MobNum: `+91${MobNum}`, // Add the mobile number
+        otp: enteredOtp,
+      };
+
+      // Send a POST request to verify the OTP
+      const response = await fetch(
+        'https://qky6iinshd.execute-api.ap-northeast-1.amazonaws.com/dev/otp/verify',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+        console.log(response);
+      if (response.status === 200) {
+        // OTP verification successful, reset OTP input and navigate to the Home screen
         setOtp(['', '', '', '', '', '']);
+        await AsyncStorage.setItem('isLogin', 'true');
         navigation.navigate('Home');
-      })
-      .catch((error) => {
-        console.error('Error setting isRegistered:', error);
-      });
-    } else {
-      setOtp(['', '', '', '', '', '']);
-      Alert.alert('Invalid OTP', 'Please enter a valid OTP.', [{ text: 'OK' }], {
-        cancelable: false,
-      });
+      } else if (response.status === 400) {
+        // OTP verification failed, display an error message
+        setOtp(['', '', '', '', '', '']);
+        Alert.alert('Invalid OTP', 'The entered OTP is incorrect. Please try again.', [{ text: 'OK' }], {
+          cancelable: false,
+        });
+      } else {
+        // Handle other status codes here
+        Alert.alert('Error', 'An unexpected error occurred. Please try again later.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Alert.alert('Error', 'An unexpected error occurred. Please try again later.');
     }
   };
+
+
+  //testing//
+  //  const handleOtpSubmission = () => {
+  //   // Combine the individual OTP digits
+  //   const enteredOtp = otp.join('');
+
+  //   // Implement your OTP verification logic here
+  //   // For example, you can compare the entered OTP with a valid OTP
+  //   // and navigate to the HomeScreen upon successful verification
+  //   const validOtp = '123456'; // Replace with your valid OTP
+  //   if (enteredOtp === validOtp) {
+  //     AsyncStorage.setItem('isRegistered', 'true')
+  //     .then(() => {
+  //       setOtp(['', '', '', '', '', '']);
+  //       navigation.navigate('Home');
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error setting isRegistered:', error);
+  //     });
+  //   } else {
+  //     setOtp(['', '', '', '', '', '']);
+  //     Alert.alert('Invalid OTP', 'Please enter a valid OTP.', [{ text: 'OK' }], {
+  //       cancelable: false,
+  //     });
+  //   }
+  // };
 
   const handleOtpInputChange = (index, value) => {
     const newOtp = [...otp];

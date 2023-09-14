@@ -13,8 +13,8 @@
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
-      android:icon="@mipmap/ease_icon"
-      android:roundIcon="@mipmap/ease_icon"
+      android:icon="@mipmap/handshakeicon"
+      android:roundIcon="@mipmap/handshakeicon"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
       <activity

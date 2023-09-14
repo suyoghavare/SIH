@@ -8,7 +8,7 @@ const startSmsListener = ({ setIsModalVisible, navigation, transactionId }) => {
     console.log('Received SMS:', smsBody);
 
     // Check if the SMS contains "True" and the transactionId
-    if (smsBody.includes('True') && smsBody.includes(transactionId)) {
+    if (smsBody.includes('Transaction Successfull!')) {
       // Close the modal when the desired SMS is received
       setIsModalVisible(false);
 
@@ -42,7 +42,7 @@ const startSmsListener = ({ setIsModalVisible, navigation, transactionId }) => {
       );
     }
     // Check if the SMS contains "False" and the transactionId
-    else if (smsBody.includes('False') && smsBody.includes(transactionId)) {
+    else if (smsBody.includes('Transaction Failed!')) {
       // Close the modal when the desired SMS is received
       setIsModalVisible(false);
 
