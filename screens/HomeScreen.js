@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather'; // Import the Feather icons
+import Icon from 'react-native-vector-icons/Feather';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = ({ navigation }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [firstTimePayment, setFirstTimePayment] = useState(true);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // Clear the user credentials from AsyncStorage
+    try {
+      await AsyncStorage.removeItem('userData');
+      await AsyncStorage.removeItem('isRegistered');
+    } catch (error) {
+      console.error('Error clearing user data:', error);
+    }
+
     // Implement logout logic here
     // For now, just navigate back to the login screen
     navigation.navigate('Login');

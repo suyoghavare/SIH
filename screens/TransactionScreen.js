@@ -5,6 +5,8 @@ import db from './database';
 const TransactionScreen = () => {
   const [paymentHistory, setPaymentHistory] = useState([]);
   const [totalSuccessAmount, setTotalSuccessAmount] = useState(0);
+  const [totalSuccessAmountLastWeek, setTotalSuccessAmountLastWeek] = useState(0);
+  const [totalSuccessAmountLastMonth, setTotalSuccessAmountLastMonth] = useState(0);
 
   useEffect(() => {
     // Retrieve payment history from the database
@@ -17,6 +19,8 @@ const TransactionScreen = () => {
           const history = [];
 
           let successAmount = 0; // Track the total successful amount
+          let successAmountLastWeek = 0;
+          let successAmountLastMonth = 0;
 
           for (let i = 0; i < rows.length; i++) {
             const item = rows.item(i);
@@ -34,11 +38,24 @@ const TransactionScreen = () => {
             // Add the successful transaction amount to the total
             if (item.status === 'success') {
               successAmount += item.amount;
+              const itemDate = new Date(item.date_time);
+
+              // Check if the transaction date falls within the last week
+              if (itemDate >= new Date().getTime() - 7 * 24 * 60 * 60 * 1000) {
+                successAmountLastWeek += item.amount;
+              }
+
+              // Check if the transaction date falls within the last month
+              if (itemDate >= new Date().getTime() - 30 * 24 * 60 * 60 * 1000) {
+                successAmountLastMonth += item.amount;
+              }
             }
           }
 
           setPaymentHistory(history);
           setTotalSuccessAmount(successAmount);
+          setTotalSuccessAmountLastWeek(successAmountLastWeek);
+          setTotalSuccessAmountLastMonth(successAmountLastMonth);
         },
         (error) => {
           console.error('Error fetching payment history:', error);
@@ -85,6 +102,12 @@ const TransactionScreen = () => {
         <Text style={styles.totalSuccessAmount}>
           Total Amount Spent: ₹ {totalSuccessAmount.toFixed(2)}
         </Text>
+        <Text style={styles.totalSuccessAmountLastWeek}>
+          Last Week: ₹ {totalSuccessAmountLastWeek.toFixed(2)}
+        </Text>
+        <Text style={styles.totalSuccessAmountLastMonth}>
+          Last Month: ₹ {totalSuccessAmountLastMonth.toFixed(2)}
+        </Text>
       </View>
       <FlatList
         data={paymentHistory}
@@ -112,6 +135,18 @@ const styles = StyleSheet.create({
     color: '#007BFF',
   },
   totalSuccessAmount: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#000',
+    marginTop: 5,
+  },
+  totalSuccessAmountLastWeek: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#000',
+    marginTop: 5,
+  },
+  totalSuccessAmountLastMonth: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#000',
