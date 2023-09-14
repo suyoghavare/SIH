@@ -11,7 +11,7 @@ const PaymentSuccess = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Icon name="check-circle" size={100} color="#0079FF" />
+      <Icon name="check-circle" size={100} color="#3CB043" />
       <Text style={styles.message}>Your payment is successfully processed. Please check the transaction history for updates.</Text>
     </View>
   );

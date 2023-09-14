@@ -63,7 +63,7 @@ const StartScreen = ({ navigation }) => {
         {isBiometricAvailable ? (
           <TouchableOpacity
             style={styles.iconButton}
-            onPress={onPressAuthenticate}
+            onPress={onPressAuthenticate()}
           >
             <Text style={styles.icon}>🔒</Text> 
           </TouchableOpacity>
