@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OtpScreen = ({ navigation, route }) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -70,8 +71,14 @@ const OtpScreen = ({ navigation, route }) => {
     // and navigate to the HomeScreen upon successful verification
     const validOtp = '123456'; // Replace with your valid OTP
     if (enteredOtp === validOtp) {
-      setOtp(['', '', '', '', '', '']);
-      navigation.navigate('Home');
+      AsyncStorage.setItem('isRegistered', 'true')
+      .then(() => {
+        setOtp(['', '', '', '', '', '']);
+        navigation.navigate('Home');
+      })
+      .catch((error) => {
+        console.error('Error setting isRegistered:', error);
+      });
     } else {
       setOtp(['', '', '', '', '', '']);
       Alert.alert('Invalid OTP', 'Please enter a valid OTP.', [{ text: 'OK' }], {

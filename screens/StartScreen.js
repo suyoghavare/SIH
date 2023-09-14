@@ -1,67 +1,60 @@
 import React, { useState, useEffect } from "react";
-import { TouchableOpacity, View, TextInput,Text, StyleSheet } from "react-native";
+import { TouchableOpacity, View, Text, Alert, StyleSheet } from "react-native";
 import TouchID from 'react-native-touch-id';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const StartScreen = ({ navigation }) => {
   const [isBiometricAvailable, setIsBiometricAvailable] = useState(false);
-  const [pin, setPin] = useState("");
 
   useEffect(() => {
     checkBiometricAvailability();
   }, []);
 
   const checkBiometricAvailability = () => {
-    const isTouchIDAvailable = TouchID.isSupported();
-    setIsBiometricAvailable(isTouchIDAvailable);
+    TouchID.isSupported()
+      .then((biometryType) => {
+        setIsBiometricAvailable(true);
+      })
+      .catch((error) => {
+        console.error("Biometric authentication not supported:", error);
+      });
   };
 
-  const onPressAuthenticate = async () => {
-    if (isBiometricAvailable) {
-      const optionalConfigObject = {
-        title: "Authentication Required", // Title shown in the prompt
-        sensorDescription: "Touch your fingerprint sensor", // Description shown in the prompt
-        cancelText: "Cancel", // Label for the cancel button
-        fallbackTitle: "Enter PIN", // Title shown in the fallback prompt
-        fallbackDescription: "Enter your PIN to proceed", // Description shown in the fallback prompt
-      };
+  const onPressAuthenticate = () => {
+    const optionalConfigObject = {
+      title: "Authentication Required",
+      sensorDescription: "Use your fingerprint or Face ID",
+      cancelText: "Cancel",
+    };
 
-      TouchID.authenticate("Authenticate with your fingerprint to proceed to log in securely.", optionalConfigObject)
-        .then((success) => {
-          if (success) {
-            navigateToLogin();
-          } else {
-            console.log("Biometric authentication failed or canceled.");
-            // Prompt the user for their PIN
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+    TouchID.authenticate("Authenticate with biometric data.", optionalConfigObject)
+      .then((success) => {
+        if (success) {
+          // Biometric authentication succeeded, check if the user is registered
+          checkUserRegistration();
+        } else {
+          console.log("Biometric authentication failed or canceled.");
+          // Biometric authentication failed, show an alert to the user
+          Alert.alert("Biometric authentication failed.");
+        }
+      })
+      .catch((error) => {
+        console.error("Biometric authentication error:", error);
+        // Biometric authentication error, show an alert to the user
+        Alert.alert("Biometric authentication error.");
+      });
+  };
+
+  const checkUserRegistration = async () => {
+    const isRegistered = await AsyncStorage.getItem('isRegistered');
+
+    if (isRegistered === 'true') {
+      // User is registered, navigate to the Home screen
+      navigation.navigate("Home");
     } else {
-      // Prompt the user for their PIN
-      Alert.alert(
-        "Biometric authentication is not available.",
-        "Please enter your PIN to proceed.",
-        [
-          {
-            text: "Cancel",
-            onPress: () => {
-              // Do nothing
-            },
-          },
-          {
-            text: "OK",
-            onPress: () => {
-              // Authenticate the user with their PIN
-            },
-          },
-        ],
-      );
+      // User is not registered, navigate to the Login screen
+      navigation.navigate("Login");
     }
-  };
-
-  const navigateToLogin = () => {
-    navigation.navigate("Login");
   };
 
   return (
@@ -82,19 +75,9 @@ const StartScreen = ({ navigation }) => {
       <Text style={styles.subtitle}>
         Use your fingerprint or Face ID to log in securely.
       </Text>
-      {isBiometricAvailable ? null : (
-        <TextInput
-          style={styles.pinInput}
-          placeholder="Enter PIN"
-          value={pin}
-          onChangeText={(text) => setPin(text)}
-          secureTextEntry={true}
-        />
-      )}
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -123,13 +106,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingHorizontal: 30,
     color: "#666",
-  },
-  pinInput: {
-    width: 200,
-    height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    padding: 10,
   },
 });
 

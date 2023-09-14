@@ -1,32 +1,43 @@
-// RegisterScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNetInfo } from "@react-native-community/netinfo";
-import FontAwesome from 'react-native-vector-icons/FontAwesome'; // Import FontAwesome icons
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RegisterScreen = ({ navigation }) => {
-    const netInfo = useNetInfo();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [aadharNumber, setAadharNumber] = useState('');
   const [panCardNumber, setPanCardNumber] = useState('');
   const [dob, setDOB] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleRegister = () => {
-    if (!netInfo.isConnected) {
-        Alert.alert(
-          'No Internet Connection',
-          'Please connect to the internet to proceed.',
-          [{ text: 'OK' }],
-          { cancelable: false }
-        );
-        return;
-      }
-    // Implement your registration logic here
-    // For example, you can validate the inputs and register the user
-    // Navigate to the HomeScreen upon successful registration
-    navigation.navigate('Ease Pay');
+  const handleRegister = async () => {
+    // Validate the inputs here (e.g., check if they are not empty)
+
+    // Create an object to store user registration data
+    const userData = {
+      fullName,
+      email,
+      phoneNumber,
+      aadharNumber,
+      panCardNumber,
+      dob,
+      password,
+    };
+
+    try {
+      // Store the user data in AsyncStorage (you can use a different key)
+      await AsyncStorage.setItem('userData', JSON.stringify(userData));
+      // You can also store a flag to indicate that the user is registered
+      await AsyncStorage.setItem('isRegistered', 'true');
+
+      // Navigate to the HomeScreen upon successful registration
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error('Error storing user data:', error);
+      // Handle the error, possibly show an error message to the user
+    }
   };
 
   return (
@@ -93,6 +104,17 @@ const RegisterScreen = ({ navigation }) => {
           placeholderTextColor={'#000'}
         />
       </View>
+      <View style={styles.iconInput}>
+        <FontAwesome name="lock" size={20} color="#007BFF" />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry={true}
+          value={password}
+          onChangeText={setPassword}
+          placeholderTextColor={'#000'}
+        />
+      </View>
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
@@ -126,13 +148,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     marginBottom: 15,
-    color : '#000'  
+    color: '#000',
   },
   input: {
     flex: 1,
     marginLeft: 10,
     fontSize: 16,
-    color : '#000'
+    color: '#000',
   },
   button: {
     backgroundColor: '#007BFF',
