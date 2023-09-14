@@ -11,7 +11,7 @@ const PaymentFail = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Icon name="check-circle" size={100} color="#0079FF" />
+      <Icon name="check-circle" size={100} color="#D30000" />
       <Text style={styles.message}>Your payment is failed. Please try again.</Text>
     </View>
   );
